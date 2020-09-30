@@ -5,8 +5,8 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-if (isset($_POST['id'])){
-    $pokemon = $_POST['id'];
+if (isset($_GET['id'])){
+    $pokemon = $_GET['id'];
 } else {
     $pokemon = 1;
 }
@@ -22,7 +22,7 @@ $data = getData($url);
 $idNumber = getId($data);
 $randMoves = getMoves($data);
 $evoChain = getEvolutions($data);
-var_dump($evoChain);
+$evoSprites = getEvolutionSprites($evoChain);
 
 function getId($data)
 {
@@ -71,11 +71,29 @@ function getEvolutions($data){
     } else {
         do {
             array_push($evolveChain, $evoData['species']['name']);
-            $evoData = $evoData['evolves_to'][0];
-        } while (array_key_exists(0, $evoData['evolves_to']));
-        //array_push($evolveChain, $evoData['species']['name']);
+            if ($evoData['evolves_to']){
+                $evoData = $evoData['evolves_to'][0];
+            } else {
+                $evoData = null;
+            }
+        } while (!!$evoData);
     }
     return $evolveChain;
+}
+
+function getEvolutionSprites($data){
+    $evoData = array();
+    $sprites = array();
+    $id = array();
+
+    for ($i = 0; $i < count($data); $i++){
+        $url = 'https://pokeapi.co/api/v2/pokemon/' . $data[$i];
+        $get = getData($url);
+        array_push($sprites, $get['sprites']['front_default']);
+        array_push($id, $get['id']);
+    }
+    array_push($evoData, $sprites, $id);
+    return $evoData;
 }
 
 ?>
@@ -92,7 +110,7 @@ function getEvolutions($data){
 </head>
 <body>
 
-<form action="index.php" method="post">
+<form method="get">
     <label for="id">ID or Name: </label>
     <input type="text" name="id" id="id"><br>
     <input type="submit">
@@ -105,6 +123,14 @@ function getEvolutions($data){
     $i = 0;
     while ($i < count($randMoves)) {
         echo '<strong>' . $randMoves[$i] . '</strong><br>';
+        $i++;
+    }
+    ?>
+    <br>
+    <?php
+    $i = 0;
+    while ($i < count($evoSprites[0])) {
+        echo '<a href="?id=' . $evoSprites[1][$i] . '"><img src="' . $evoSprites[0][$i] . '" alt=""></a>';
         $i++;
     }
     ?>
