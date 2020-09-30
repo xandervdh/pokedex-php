@@ -16,13 +16,14 @@ function getData($url)
     $get = file_get_contents($url);
     return json_decode($get, true);
 }
-
+$evoData = array();
 $url = 'https://pokeapi.co/api/v2/pokemon/' . $pokemon;
 $data = getData($url);
 $idNumber = getId($data);
 $randMoves = getMoves($data);
 $evoChain = getEvolutions($data);
 $evoSprites = getEvolutionSprites($evoChain);
+
 
 function getId($data)
 {
@@ -61,8 +62,9 @@ function getEvolutions($data){
     $species = getData($speciesUrl);
     $evolutionUrl = $species['evolution_chain']['url'];
     $evolutionChain = getData($evolutionUrl);
-    $evoData = $evolutionChain['chain'];
+    $GLOBALS['evoData'] = $evolutionChain['chain'];
     $evolveChain = array();
+    $evoData = $evolutionChain['chain'];
 
     if (count($evoData['evolves_to']) > 1){
         for ($i = 0; $i < count($evoData['evolves_to']); $i++){
@@ -107,7 +109,7 @@ function getEvolutionSprites($data){
           content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="style.css" type="text/css">
-    <title>Document</title>
+    <title>Pokedex</title>
 </head>
 <body>
 
@@ -132,9 +134,12 @@ function getEvolutionSprites($data){
     $i = 0;
     while ($i < count($evoSprites[0])) {
         echo '<a href="?id=' . $evoSprites[1][$i] . '"><img src="' . $evoSprites[0][$i] . '" alt=""></a>';
-        if ($i < count($evoSprites[0]) -1){
-            echo '<img src="images/arrow.png" alt="arrow" class="arrow">';
+        if (count($evoData['evolves_to']) <= 1){
+            if ($i < count($evoSprites[0]) -1){
+                echo '<img src="images/arrow.png" alt="arrow" class="arrow">';
+            }
         }
+
         $i++;
     }
     ?>
