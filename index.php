@@ -106,6 +106,7 @@ function getEvolutionSprites($data){
     <meta name="viewport"
           content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css" type="text/css">
     <title>Document</title>
 </head>
 <body>
@@ -131,6 +132,9 @@ function getEvolutionSprites($data){
     $i = 0;
     while ($i < count($evoSprites[0])) {
         echo '<a href="?id=' . $evoSprites[1][$i] . '"><img src="' . $evoSprites[0][$i] . '" alt=""></a>';
+        if ($i < count($evoSprites[0]) -1){
+            echo '<img src="images/arrow.png" alt="arrow" class="arrow">';
+        }
         $i++;
     }
     ?>
