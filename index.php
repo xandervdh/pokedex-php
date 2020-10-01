@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+include 'class.php';
+
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
@@ -20,7 +22,6 @@ function getData($url)
 $evoData = array();
 $url = 'https://pokeapi.co/api/v2/pokemon/' . $pokemon;
 $data = getData($url);
-$idNumber = getId($data);
 $randMoves = getMoves($data);
 $evoChain = getEvolutions($data);
 $evoSprites = getEvolutionSprites($evoChain);
@@ -32,6 +33,7 @@ if (isset($data['types'][1]['type']['name'])){
     $singlePokColorTwo = $singlePokColorOne;
 }
 
+$singlepokemonClass = fillClass($data);
 
 function getId($data)
 {
@@ -63,6 +65,14 @@ function getMoves($data)
     }
 
     return $moves;
+}
+
+function fillClass($data){
+    $class = new singlePokemon();
+    $class->id = getId($data);
+    $class->name = $data['name'];
+    $class->sprite = $data['sprites']['front_default'];
+    return $class;
 }
 
 function getEvolutions($data)
@@ -194,9 +204,9 @@ function getColor($type)
 </form>
 <div id="wrapper">
     <div id="pokemon" style="background-image: linear-gradient(to right, <?php echo $singlePokColorOne . ', ' . $singlePokColorTwo; ?>)">
-        <strong><?php echo $data['name'];?></strong><br>
-        <em><?php echo $idNumber ?></em>
-        <img src="<?php echo $data['sprites']['front_default'] ?>" alt=""><br>
+        <strong><?php echo $singlepokemonClass->name;?></strong><br>
+        <em><?php echo $singlepokemonClass->id; ?></em>
+        <img src="<?php echo $singlepokemonClass->sprite; ?>" alt=""><br>
         <?php
         $i = 0;
         while ($i < count($randMoves)) {
