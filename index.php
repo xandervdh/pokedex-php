@@ -22,9 +22,7 @@ function getData($url)
 $evoData = array();
 $url = 'https://pokeapi.co/api/v2/pokemon/' . $pokemon;
 $data = getData($url);
-$randMoves = getMoves($data);
 $evoChain = getEvolutions($data);
-$evoSprites = getEvolutionSprites($evoChain);
 $singlePokColorOne = getColor($data['types'][0]['type']['name']);
 $singlePokColorTwo = "";
 if (isset($data['types'][1]['type']['name'])){
@@ -34,6 +32,7 @@ if (isset($data['types'][1]['type']['name'])){
 }
 
 $singlepokemonClass = fillClass($data);
+$evolutionClass = fillEvolutionClass($evoChain);
 
 function getId($data)
 {
@@ -46,9 +45,12 @@ function getId($data)
     }
 }
 
-function getMoves($data)
-{
-    $moves = array();
+function fillClass($data){
+    $class = new singlePokemon();
+    $class->id = getId($data);
+    $class->name = $data['name'];
+    $class->sprite = $data['sprites']['front_default'];
+
     $max = count($data['moves']);
     if ($max > 4) {
         $maxMoves = 4;
@@ -58,20 +60,23 @@ function getMoves($data)
     for ($i = 0; $i < $maxMoves; $i++) {
         if ($max > 4) {
             $rand = floor(rand(0, $max - 1) - 0);
-            array_push($moves, $data['moves'][$rand]['move']['name']);
+            array_push($class->moves, $data['moves'][$rand]['move']['name']);
         } else {
-            array_push($moves, $data['moves'][$i]['move']['name']);
+            array_push($class->moves, $data['moves'][$i]['move']['name']);
         }
     }
-
-    return $moves;
+    return $class;
 }
 
-function fillClass($data){
-    $class = new singlePokemon();
-    $class->id = getId($data);
-    $class->name = $data['name'];
-    $class->sprite = $data['sprites']['front_default'];
+function fillEvolutionClass($data){
+    $class = new evolutions();
+    for ($i = 0; $i < count($data); $i++) {
+        $url = 'https://pokeapi.co/api/v2/pokemon/' . $data[$i];
+        $get = getData($url);
+        array_push($class->sprite, $get['sprites']['front_default']);
+        array_push($class->id, $get['id']);
+        array_push($class->name, $get['name']);
+    }
     return $class;
 }
 
@@ -100,24 +105,6 @@ function getEvolutions($data)
         } while (!!$evoData);
     }
     return $evolveChain;
-}
-
-function getEvolutionSprites($data)
-{
-    $evoData = array();
-    $sprites = array();
-    $id = array();
-    $names = array();
-
-    for ($i = 0; $i < count($data); $i++) {
-        $url = 'https://pokeapi.co/api/v2/pokemon/' . $data[$i];
-        $get = getData($url);
-        array_push($sprites, $get['sprites']['front_default']);
-        array_push($id, $get['id']);
-        array_push($names, $get['name']);
-    }
-    array_push($evoData, $sprites, $id, $names);
-    return $evoData;
 }
 
 function getColor($type)
@@ -209,8 +196,8 @@ function getColor($type)
         <img src="<?php echo $singlepokemonClass->sprite; ?>" alt=""><br>
         <?php
         $i = 0;
-        while ($i < count($randMoves)) {
-            echo '<strong>' . $randMoves[$i] . '</strong><br>';
+        while ($i < count($singlepokemonClass->moves)) {
+            echo '<strong>' . $singlepokemonClass->moves[$i] . '</strong><br>';
             $i++;
         }
         ?>
@@ -218,10 +205,10 @@ function getColor($type)
     <div id="evolutions">
         <?php
         $i = 0;
-        while ($i < count($evoSprites[0])) {
-            echo '<a href="?id=' . $evoSprites[1][$i] . '"><img src="' . $evoSprites[0][$i] . '" alt=""></a><strong class="evoName">' . $evoSprites[2][$i] . '</strong>';
+        while ($i < count($evolutionClass->sprite)) {
+            echo '<a href="?id=' . $evolutionClass->id[$i] . '"><img src="' . $evolutionClass->sprite[$i] . '" alt=""></a><strong class="evoName">' . $evolutionClass->name[$i] . '</strong>';
             if (count($evoData['evolves_to']) <= 1) {
-                if ($i < count($evoSprites[0]) - 1) {
+                if ($i < count($evolutionClass->sprite) - 1) {
                     echo '<img src="images/arrow.png" alt="arrow" class="arrow">';
                 }
             }
