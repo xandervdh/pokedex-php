@@ -193,7 +193,7 @@ function getColor($type)
 </form>
 <div id="wrapper">
     <div id="pokemon" style="background-image: linear-gradient(to right, <?php echo $singlePokColorOne . ', ' . $singlePokColorTwo; ?>)">
-        <em><?php echo $singlepokemonClass->name;?></em><br>
+        <strong><?php echo $singlepokemonClass->name;?></strong><br>
         <em><?php echo $singlepokemonClass->id; ?></em><br>
         <strong>height:</strong><em> <?php echo $singlepokemonClass->height / 10 ?>m</em><br>
         <strong>Weight:</strong><em> <?php echo $singlepokemonClass->weight / 10 ?>kg</em><br>
