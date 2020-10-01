@@ -6,6 +6,8 @@ class singlePokemon{
     public $moves = array();
     public $typeOne = "";
     public $typeTwo = "";
+    public $height = "";
+    public $weight = "";
 }
 
 class evolutions{

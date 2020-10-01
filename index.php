@@ -23,16 +23,10 @@ $evoData = array();
 $url = 'https://pokeapi.co/api/v2/pokemon/' . $pokemon;
 $data = getData($url);
 $evoChain = getEvolutions($data);
-$singlePokColorOne = getColor($data['types'][0]['type']['name']);
-$singlePokColorTwo = "";
-if (isset($data['types'][1]['type']['name'])){
-    $singlePokColorTwo = getColor($data['types'][1]['type']['name']);
-} else {
-    $singlePokColorTwo = $singlePokColorOne;
-}
-
 $singlepokemonClass = fillClass($data);
 $evolutionClass = fillEvolutionClass($evoChain);
+$singlePokColorOne = getColor($singlepokemonClass->typeOne);
+$singlePokColorTwo = getColor($singlepokemonClass->typeTwo);
 
 function getId($data)
 {
@@ -50,6 +44,14 @@ function fillClass($data){
     $class->id = getId($data);
     $class->name = $data['name'];
     $class->sprite = $data['sprites']['front_default'];
+    $class->height = $data['height'];
+    $class->weight = $data['weight'];
+    $class->typeOne = $data['types'][0]['type']['name'];
+    if (isset($data['types'][1]['type']['name'])){
+        $class->typeTwo = $data['types'][1]['type']['name'];
+    } else {
+        $class->typeTwo = $class->typeOne;
+    }
 
     $max = count($data['moves']);
     if ($max > 4) {
@@ -191,13 +193,28 @@ function getColor($type)
 </form>
 <div id="wrapper">
     <div id="pokemon" style="background-image: linear-gradient(to right, <?php echo $singlePokColorOne . ', ' . $singlePokColorTwo; ?>)">
-        <strong><?php echo $singlepokemonClass->name;?></strong><br>
-        <em><?php echo $singlepokemonClass->id; ?></em>
+        <em><?php echo $singlepokemonClass->name;?></em><br>
+        <em><?php echo $singlepokemonClass->id; ?></em><br>
+        <strong>height:</strong><em> <?php echo $singlepokemonClass->height / 10 ?>m</em><br>
+        <strong>Weight:</strong><em> <?php echo $singlepokemonClass->weight / 10 ?>kg</em><br>
         <img src="<?php echo $singlepokemonClass->sprite; ?>" alt=""><br>
+        <strong><?php
+            if ($singlepokemonClass->typeOne !== $singlepokemonClass->typeTwo){
+                echo 'Type One:';
+            } else {
+                echo 'Type';
+            }
+            ?></strong><em> <?php echo $singlepokemonClass->typeOne ?></em><br>
+        <?php
+        if ($singlepokemonClass->typeOne !== $singlepokemonClass->typeTwo) {
+            echo '<strong>Type Two:</strong><em>' . $singlepokemonClass->typeTwo . '</em><br>';
+        }
+        ?>
+        <strong>Moves:</strong><br>
         <?php
         $i = 0;
         while ($i < count($singlepokemonClass->moves)) {
-            echo '<strong>' . $singlepokemonClass->moves[$i] . '</strong><br>';
+            echo '<em>' . $singlepokemonClass->moves[$i] . '</em><br>';
             $i++;
         }
         ?>
