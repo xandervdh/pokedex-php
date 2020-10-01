@@ -209,7 +209,7 @@ function getColor($type)
         <?php
         $i = 0;
         while ($i < count($evoSprites[0])) {
-            echo '<a href="?id=' . $evoSprites[1][$i] . '"><img src="' . $evoSprites[0][$i] . '" alt="">' . $evoSprites[2][$i] . '</a>';
+            echo '<a href="?id=' . $evoSprites[1][$i] . '"><img src="' . $evoSprites[0][$i] . '" alt=""></a><strong class="evoName">' . $evoSprites[2][$i] . '</strong>';
             if (count($evoData['evolves_to']) <= 1) {
                 if ($i < count($evoSprites[0]) - 1) {
                     echo '<img src="images/arrow.png" alt="arrow" class="arrow">';
