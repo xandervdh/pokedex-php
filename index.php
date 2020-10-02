@@ -22,11 +22,43 @@ function getData($url)
 $evoData = array();
 $url = 'https://pokeapi.co/api/v2/pokemon/' . $pokemon;
 $data = getData($url);
+$pageUrl = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=12';
+$pageData = getData($pageUrl);
+$prevPage = null;
+$nextPage = null;
+if (isset($pageData['previous'])){
+    $prevPage = $pageData['previous'];
+}
+if (isset($pageData['next'])){
+    $nextPage = $pageData['next'];
+}
+$pokemonPage = getPageUrls($pageData);
+$pageClass = getPageClass($pokemonPage);
 $evoChain = getEvolutions($data);
-$singlepokemonClass = fillClass($data);
+$singlePokemonClass = fillClass($data);
 $evolutionClass = fillEvolutionClass($evoChain);
-$singlePokColorOne = getColor($singlepokemonClass->typeOne);
-$singlePokColorTwo = getColor($singlepokemonClass->typeTwo);
+$singlePokColorOne = getColor($singlePokemonClass->typeOne);
+$singlePokColorTwo = getColor($singlePokemonClass->typeTwo);
+
+function getPageUrls($data){
+    $array = array();
+    for ($i = 0; $i < count($data['results']); $i++){
+        array_push($array, $data['results'][$i]);
+    }
+    return $array;
+}
+
+function getPageClass($data){
+    $class = new page();
+    for ($i = 0; $i < count($data); $i++){
+        $pokData = getData($data[$i]['url']);
+        array_push($class->sprite, $pokData['sprites']['front_default']);
+        array_push($class->name, $pokData['name']);
+        array_push($class->id, $pokData['id']);
+        array_push($class->hashId, getId($pokData));
+    }
+    return $class;
+}
 
 function getId($data)
 {
@@ -193,28 +225,28 @@ function getColor($type)
 </form>
 <div id="wrapper">
     <div id="pokemon" style="background-image: linear-gradient(to right, <?php echo $singlePokColorOne . ', ' . $singlePokColorTwo; ?>)">
-        <strong><?php echo $singlepokemonClass->name;?></strong><br>
-        <em><?php echo $singlepokemonClass->id; ?></em><br>
-        <strong>height:</strong><em> <?php echo $singlepokemonClass->height / 10 ?>m</em><br>
-        <strong>Weight:</strong><em> <?php echo $singlepokemonClass->weight / 10 ?>kg</em><br>
-        <img src="<?php echo $singlepokemonClass->sprite; ?>" alt=""><br>
+        <strong><?php echo $singlePokemonClass->name;?></strong><br>
+        <em><?php echo $singlePokemonClass->id; ?></em><br>
+        <strong>height:</strong><em> <?php echo $singlePokemonClass->height / 10 ?>m</em><br>
+        <strong>Weight:</strong><em> <?php echo $singlePokemonClass->weight / 10 ?>kg</em><br>
+        <img src="<?php echo $singlePokemonClass->sprite; ?>" alt=""><br>
         <strong><?php
-            if ($singlepokemonClass->typeOne !== $singlepokemonClass->typeTwo){
+            if ($singlePokemonClass->typeOne !== $singlePokemonClass->typeTwo){
                 echo 'Type One:';
             } else {
                 echo 'Type';
             }
-            ?></strong><em> <?php echo $singlepokemonClass->typeOne ?></em><br>
+            ?></strong><em> <?php echo $singlePokemonClass->typeOne ?></em><br>
         <?php
-        if ($singlepokemonClass->typeOne !== $singlepokemonClass->typeTwo) {
-            echo '<strong>Type Two:</strong><em>' . $singlepokemonClass->typeTwo . '</em><br>';
+        if ($singlePokemonClass->typeOne !== $singlePokemonClass->typeTwo) {
+            echo '<strong>Type Two:</strong><em>' . $singlePokemonClass->typeTwo . '</em><br>';
         }
         ?>
         <strong>Moves:</strong><br>
         <?php
         $i = 0;
-        while ($i < count($singlepokemonClass->moves)) {
-            echo '<em>' . $singlepokemonClass->moves[$i] . '</em><br>';
+        while ($i < count($singlePokemonClass->moves)) {
+            echo '<em>' . $singlePokemonClass->moves[$i] . '</em><br>';
             $i++;
         }
         ?>
@@ -231,6 +263,17 @@ function getColor($type)
             }
 
             $i++;
+        }
+        ?>
+    </div>
+    <div id="pokePage">
+        <?php
+        for ($i = 0; $i < count($pageClass->id); $i++){
+            echo '<a href="?id=' . $pageClass->id[$i] . '">';
+            echo '<strong>' . $pageClass->name[$i] . '</strong><br>';
+            echo '<em>' . $pageClass->hashId[$i] . '</em><br>';
+            echo '<img src="' . $pageClass->sprite[$i] . '" alt="sprite of ' . $pageClass->name[$i] . '">';
+            echo '</a><br>';
         }
         ?>
     </div>

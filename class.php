@@ -15,3 +15,10 @@ class evolutions{
     public $sprite = array();
     public $name = array();
 }
+
+class page{
+    public $id = array();
+    public $sprite = array();
+    public $name = array();
+    public $hashId = array();
+}
