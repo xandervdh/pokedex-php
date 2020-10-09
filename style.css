@@ -5,9 +5,7 @@
 }
 
 .evoName {
-  margin: 20px;
-  margin-top: 100px;
-  margin-left: -80px;
+  margin: 100px 20px 20px -80px;
 }
 
 #pokePage {
@@ -25,11 +23,26 @@
 
 #pokemon {
   text-align: center;
+  padding: 10px 0;
 }
 
 .sprite {
   margin-bottom: 100px;
   margin-left: 90px;
+}
+
+#navButtons {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.previous {
+  margin-right: 20px;
+  width: 100px;
+}
+
+.next {
+  width: 100px;
 }
 
 /*# sourceMappingURL=style.css.map */

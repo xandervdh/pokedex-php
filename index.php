@@ -232,7 +232,7 @@ function getColor($type)
                     <input type="text" name="id" id="id" placeholder="Pokemon name or ID">
                 </li>
                 <li class="nav-item">
-                    <button type="submit" class="nav-link" >Search!</button>
+                    <button type="submit" class="nav-link btn btn-primary" >Search!</button>
                 </li>
             </ul>
             </form>
@@ -294,6 +294,10 @@ function getColor($type)
             echo '</a></div><br>';
         }
         ?>
+        <div id="navButtons">
+            <a href="?page=0" class="previous btn btn-primary">Previous</a>
+            <a href="?page=1" class="next btn btn-primary">Next</a>
+        </div>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
