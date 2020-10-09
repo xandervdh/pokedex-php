@@ -219,11 +219,27 @@ function getColor($type)
 </head>
 <body>
 
-<form method="get">
-    <label for="id">ID or Name: </label>
-    <input type="text" name="id" id="id"><br>
-    <button type="submit">Submit</button>
-</form>
+<div id="input">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+                aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <form method="get">
+            <ul class="nav">
+                <li class="nav-item">
+                    <input type="text" name="id" id="id" placeholder="Pokemon name or ID">
+                </li>
+                <li class="nav-item">
+                    <button type="submit" class="nav-link" >Search!</button>
+                </li>
+            </ul>
+            </form>
+        </div>
+    </nav>
+</div>
+
 <div id="wrapper">
     <div id="pokemon" style="background-image: linear-gradient(to right, <?php echo $singlePokColorOne . ', ' . $singlePokColorTwo; ?>)">
         <strong><?php echo $singlePokemonClass->name;?></strong><br>
@@ -256,7 +272,7 @@ function getColor($type)
         <?php
         $i = 0;
         while ($i < count($evolutionClass->sprite)) {
-            echo '<a href="?id=' . $evolutionClass->id[$i] . '"><img src="' . $evolutionClass->sprite[$i] . '" alt=""><strong class="evoName">' . $evolutionClass->name[$i] . '</strong></a>';
+            echo '<a href="?id=' . $evolutionClass->id[$i] . '"><img class="sprite" src="' . $evolutionClass->sprite[$i] . '" alt=""><strong class="evoName">' . $evolutionClass->name[$i] . '</strong></a>';
             if (count($evoData['evolves_to']) <= 1) {
                 if ($i < count($evolutionClass->sprite) - 1) {
                     echo '<img src="images/arrow.png" alt="arrow" class="arrow">';
