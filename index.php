@@ -22,7 +22,7 @@ function getData($url)
 $evoData = array();
 $url = 'https://pokeapi.co/api/v2/pokemon/' . $pokemon;
 $data = getData($url);
-$pageUrl = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=12';
+$pageUrl = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=20';
 $pageData = getData($pageUrl);
 $prevPage = null;
 $nextPage = null;
@@ -213,6 +213,7 @@ function getColor($type)
     <meta name="viewport"
           content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css" type="text/css">
     <title>Pokedex</title>
 </head>
@@ -255,7 +256,7 @@ function getColor($type)
         <?php
         $i = 0;
         while ($i < count($evolutionClass->sprite)) {
-            echo '<a href="?id=' . $evolutionClass->id[$i] . '"><img src="' . $evolutionClass->sprite[$i] . '" alt=""></a><strong class="evoName">' . $evolutionClass->name[$i] . '</strong>';
+            echo '<a href="?id=' . $evolutionClass->id[$i] . '"><img src="' . $evolutionClass->sprite[$i] . '" alt=""><strong class="evoName">' . $evolutionClass->name[$i] . '</strong></a>';
             if (count($evoData['evolves_to']) <= 1) {
                 if ($i < count($evolutionClass->sprite) - 1) {
                     echo '<img src="images/arrow.png" alt="arrow" class="arrow">';
@@ -266,17 +267,21 @@ function getColor($type)
         }
         ?>
     </div>
-    <div id="pokePage">
+    <div id="pokePage" class="row">
         <?php
         for ($i = 0; $i < count($pageClass->id); $i++){
+            echo '<div class="col-3 pagepok">';
             echo '<a href="?id=' . $pageClass->id[$i] . '">';
             echo '<strong>' . $pageClass->name[$i] . '</strong><br>';
             echo '<em>' . $pageClass->hashId[$i] . '</em><br>';
             echo '<img src="' . $pageClass->sprite[$i] . '" alt="sprite of ' . $pageClass->name[$i] . '">';
-            echo '</a><br>';
+            echo '</a></div><br>';
         }
         ?>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 </body>
 </html>

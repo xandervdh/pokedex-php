@@ -5,7 +5,25 @@
 
 .evoName {
   margin: 20px;
+  margin-top: 100px;
   margin-left: -80px;
+}
+
+#pokePage {
+  margin: 0;
+}
+
+#evolutions {
+  margin: 0;
+  text-align: center;
+}
+
+.pagepok {
+  text-align: center;
+}
+
+#pokemon {
+  text-align: center;
 }
 
 /*# sourceMappingURL=style.css.map */
